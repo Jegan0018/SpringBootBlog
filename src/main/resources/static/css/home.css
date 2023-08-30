@@ -1,0 +1,164 @@
+/* Reset some default margin and padding */
+body, h1, h2, h3, p, button,h5,h6 {
+    margin: 5px;
+    padding: 5px;
+}
+
+/* Apply your styles here */
+.post {
+    border: 5px solid #ccc;
+    padding: 10px;
+    margin: 2% 30%;
+}
+
+.post-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.post-excerpt {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.btn {
+    margin-right: 10px;
+}
+
+.filter-form h5 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.filter-form h6 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.filter-form label {
+    margin-right: 5px;
+}
+
+.filter-form span {
+    display: inline-block; /* Display checkboxes in a line */
+    margin-right: 15px; /* Add some space between checkboxes */
+    vertical-align: middle; /* Align checkboxes vertically */
+}
+
+.filter-form input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.filter-form input[type="datetime-local"],
+.filter-form input[type="text"] {
+    margin-right: 5px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.filter-form button[type="submit"],
+.clear-form button[type="submit"] {
+    margin-top: 10px;
+}
+
+/* Additional styling for form elements */
+.form-control {
+    width: 200px;
+}
+
+
+.post-details {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.post-tag {
+    background-color: #f2f2f2;
+    padding: 2px 8px;
+    margin-right: 5px;
+    border-radius: 4px;
+}
+
+.read-more-form {
+    margin-top: 10px;
+}
+
+.read-more-btn {
+    background-color: black;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.post-list{
+    text-align:center;
+}
+
+.common-button {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 2px solid black;
+    background-color: white;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    margin:10px 1px;
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    background-color: #f2f2f2;
+    color: #333;
+    border-radius: 4px;
+    margin-left:5px;
+}
+
+.pagination a:hover {
+    background-color: #ddd;
+}
+
+.pagination .active {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .disabled {
+    pointer-events: none;
+    background-color: #ddd;
+    color: #aaa;
+}
+
+.container {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.button-section {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.logout {
+    float:right;
+    align:right;
+}
+
+

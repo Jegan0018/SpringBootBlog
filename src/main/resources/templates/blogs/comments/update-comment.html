@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Comment</title>
+    <link rel="stylesheet" href="/css/createform.css">
+</head>
+<body>
+<div class="container custom-container">
+    <h6>Add Comments</h6>
+    <form th:action="@{/comments/update}" th:object="${comment}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        <input type="hidden" name="postId" th:value="${post.id}"/>
+        <label>Name :</label>
+        <input type="text" th:field="*{name}" placeholder="Name" class="form-control mb-4">
+        <label>Email :</label>
+        <input type="text" th:field="*{email}" placeholder="Email" class="form-control mb-4">
+        <label>Content :</label>
+        <textarea th:field="*{theComment}" placeholder="Comment" class="form-control mb-4"></textarea>
+        <button type="submit" class="common-button">Update</button>
+    </form>
+</div>
+</body>
+</html>

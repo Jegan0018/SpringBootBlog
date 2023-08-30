@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width initial-scale=1 shrink-to-fit=no">
+    <link rel="stylesheet" href="/css/home.css">
+    <title>Posts List</title>
+</head>
+<body>
+
+<div class="container">
+    <h1>Blogs Directory</h1>
+    <div class="button-section">
+        <div sec:authorize="isAuthenticated()">
+            <a th:href="@{/blogs/showFormForAdd(authorId=${user.id})}" class="common-button">CREATE BLOG</a>
+        </div>
+        <div sec:authorize="!isAuthenticated()">
+            <a th:href="@{/blogs/showFormForAdd}" class="common-button">CREATE BLOG</a>
+        </div>
+        <a th:href="@{/blogs/showFormForDrafts}" class="common-button">DRAFT BLOGS</a>
+        <p>
+        <div sec:authorize="isAuthenticated()">
+            <span th:text="${user.name}"></span>
+            <a th:href="@{/blogs/showFormForViewUser(authorId=${user.id})}" class="common-button">PROFILE VIEW</a>
+        </div>
+
+        </p>
+
+        <div sec:authorize="isAuthenticated()">
+            <form th:action="@{/logout}" method="post" class="logout">
+                <input type="submit" class="common-button" value="LOGOUT">
+            </form>
+        </div>
+        <div sec:authorize="!isAuthenticated()">
+            <form action="/users/login" method="get" class="logout">
+                <input type="submit" class="common-button" value="LOGIN">
+            </form>
+        </div>
+    </div>
+
+    <form th:action="@{/blogs/list}" method="get" class="filter-form mb-3">
+        <h3>Filters</h3>
+        <h5>Authors:</h5>
+        <span th:each="author : ${allAuthors}">
+                <label>
+                    <input type="checkbox" name="selectedAuthors" th:value="${author}"
+                           th:checked="${filterByAuthors != null and filterByAuthors.contains(author)}"
+                           onclick="this.form.submit()">
+                    <span th:text="${author}"></span>
+                </label>
+            </span><br>
+        <h5>Tags:</h5>
+        <span th:each="tag : ${allTags}">
+            <label>
+                <input type="checkbox" name="selectedTags" th:value="${tag}"
+                       th:checked="${filterByTags != null and filterByTags.contains(tag)}"
+                       onclick="this.form.submit()">
+                <span th:text="${tag}"></span>
+            </label>
+            </span>
+        <h5>Published Date Range</h5>
+        <label>From:</label>
+        <input type="datetime-local" name="publishedAtFrom" th:value="${publishedAtFrom}">
+        <label>To:</label>
+        <input type="datetime-local" name="publishedAtTo" th:value="${publishedAtTo}">
+        <button type="submit" class="common-button">APPLY FILTER</button>
+
+        <input type="text" name="search" class="form-control" placeholder="Search..." th:value="${search}">
+        <button type="submit" class="common-button">SEARCH</button>
+        <a th:href="@{/blogs/list(sort='asc', sortField='publishedAt')}" class="common-button">SORT ASC</a>
+        <a th:href="@{/blogs/list(sort='desc', sortField='publishedAt')}" class="common-button">SORT DESC</a>
+        <a th:href="@{/blogs/list}" class="common-button">CLEAR ALL</a>
+    </form>
+
+    <div class="post-list">
+        <div th:each="post : ${postsPage}" class="post">
+            <h2 class="post-title" th:text="${post.title}"></h2>
+            <p class="post-excerpt" th:text="${post.excerpt}"></p>
+            <p class="post-details">
+                <span class="post-author" th:text="${post.author}"></span>
+                <span class="post-published" th:text="${post.publishedAt}"></span>
+            </p>
+            <div class="post-tags">
+                <span th:each="tag : ${post.tags}" class="post-tag" th:text="${tag.name}"></span>
+            </div>
+            <p class="post-content" th:text="${#strings.substring(post.content, 0, 80) + '...'}"></p>
+            <form th:action="@{/blogs/showFormForViewPost}" method="get" class="read-more-form">
+                <input type="hidden" name="postId" th:value="${post.id}"/>
+                <button type="submit" class="read-more-btn">Read more</button>
+            </form>
+        </div>
+    </div>
+    <h1 th:text="${currentPage}"></h1>
+    <div th:if="${postsPage.totalPages > 1}" class="pagination">
+        <a th:if="${currentPage > 1}"
+           th:href="@{/blogs/list(start=${(currentPage - 2) * pageSize + 1}, limit=${pageSize}, selectedAuthors=${filterByAuthors}, selectedTags=${filterByTags}, __(${#strings.isEmpty(search)} ? '' : ('search='+${search}))__)}"
+           aria-label="Previous"
+           class="${currentPage == 1 ? 'disabled' : ''}">
+            Previous
+        </a>
+        <a th:if="${!postsPage.last}"
+           th:href="@{/blogs/list(start=${currentPage * pageSize + 1}, limit=${pageSize}, selectedAuthors=${filterByAuthors}, selectedTags=${filterByTags}, __(${#strings.isEmpty(search)} ? '' : ('search='+${search}))__)}"
+           aria-label="Next"
+           class="${postsPage.last ? 'disabled' : ''}">
+            Next
+        </a>
+    </div>
+</div>
+</body>
+</html>

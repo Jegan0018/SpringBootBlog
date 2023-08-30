@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width initial-scale=1 shrink-to-fit=no">
+  <link rel="stylesheet" href="/css/createform.css">
+    <title>Post Form</title>
+</head>
+<body>
+  <div class="container custom-container">
+    <h1>Blogs Directory</h1>
+    <h3>Create New Blog</h3>
+    <form th:action="@{/blogs/save}" th:object="${post}" method="post">
+      <input type="hidden" th:name="authorId" th:value="${authorId}" />
+      <label>Title :</label>
+      <input type="text" th:field="*{title}" class="form-control mb-4 w-50" placeholder="Title">
+      <label>Excerpt :</label>
+      <input type="text" th:field="*{excerpt}" class="form-control mb-4 w-50" placeholder="Excerpt">
+      <label>Content :</label>
+      <textarea th:field="*{content}" class="form-control mb-4 w-50" placeholder="Content"></textarea>
+      <label>Author :</label>
+      <input type="text" th:field="*{author}" class="form-control mb-4 w-50" placeholder="author">
+      <label>Publish this Blog?</label>
+      <input type="checkbox" th:field="*{isPublished}" class="mb-4"><br>
+      <label>Tags (space-separated):</label>
+      <textarea name="tagInput" required class="form-control mb-4 w-50"></textarea><br>
+      <button type="submit" class="button btn-secondary">Publish</button>
+      <a href="javascript:history.back()" class="button btn-secondary-cancel">Cancel</a>
+    </form>
+  </div>
+</body>
+</html>

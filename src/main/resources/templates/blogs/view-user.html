@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View User Details</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+<div>
+    <div class="post-list">
+        <h1>
+            <span th:text="${user.name}"></span> Posts</h1>
+        <div th:each="post : ${posts}" class="post">
+            <h2 class="post-title" th:text="${post.title}"></h2>
+            <p class="post-excerpt" th:text="${post.excerpt}"></p>
+            <p class="post-details">
+                <span class="post-author" th:text="${post.author}"></span>
+                <span class="post-published" th:text="${post.publishedAt}"></span>
+            </p>
+            <p class="post-content" th:text="${#strings.substring(post.content, 0, 80) + '...'}"></p>
+            <div class="post-tags">
+                <span th:each="tag : ${post.tags}" class="post-tag" th:text="${tag.name}"></span>
+            </div>
+            <form th:action="@{/blogs/showFormForViewPost}" method="get" class="read-more-form">
+                <input type="hidden" name="postId" th:value="${post.id}"/>
+                <button type="submit" class="read-more-btn">Read more</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

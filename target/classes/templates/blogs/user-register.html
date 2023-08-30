@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Register</title>
+    <link rel="stylesheet" href="/css/createform.css">
+</head>
+<body>
+<div class="container custom-container">
+    <h1>User Directory</h1>
+    <h3>Create New User</h3>
+    <form th:action="@{/users/saveUser}" th:object="${user}" method="post">
+        <label>Name :</label>
+        <input type="text" th:field="*{name}" class="form-control mb-4 w-50" placeholder="Name">
+        <label>Email :</label>
+        <input type="email" th:field="*{email}" class="form-control mb-4 w-50" placeholder="Email">
+        <label>Password :</label>
+        <input type="password" th:field="*{password}" class="form-control mb-4 w-50" placeholder="Password">
+        <label>Confirm Password :</label>
+        <input type="password" name="confirmPassword" class="form-control mb-4 w-50" placeholder="Confirm Password">
+        <button type="submit" class="common-button">Create User</button>
+        <a href="javascript:history.back()" class="common-button">Cancel</a>
+    </form>
+</div>
+</body>
+</html>
