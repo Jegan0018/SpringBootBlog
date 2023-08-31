@@ -36,14 +36,13 @@ public class UserController {
     @PostMapping("/saveUser")
     public String saveUser(@ModelAttribute("user") User user,@RequestParam("confirmPassword") String confirmPassword) {
         if(user.getPassword().equals(confirmPassword)) {
-            user.setRole("ROLE_USER");
+            user.setRole("ROLE_AUTHOR");
             user.setActive(true);
             user.setPassword("{noop}"+user.getPassword());
             userService.save(user);
         } else {
             System.out.println("Invalid Password");
         }
-
         return "redirect:/users/login";
     }
 }
