@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width initial-scale=1 shrink-to-fit=no">
+    <link rel="stylesheet" href="/css/home.css">
+    <title>Posts List</title>
+</head>
+<body>
+<div class="container">
+    <h1>Blogs Directory</h1>
+    <h3>Draft Blogs</h3>
+    <div class="post-list">
+        <div th:each="post : ${postsPage}" class="post">
+            <h2 class="post-title" th:text="${post.title}"></h2>
+            <p class="post-excerpt" th:text="${post.excerpt}"></p>
+            <p class="post-details">
+                <span class="post-author" th:text="${post.author}"></span>
+                <span class="post-published" th:text="${post.publishedAt}"></span>
+            </p>
+            <div class="post-tags">
+                <span th:each="tag : ${post.tags}" class="post-tag" th:text="${tag.name}"></span>
+            </div>
+            <form th:action="@{/blogs/showFormForUpdateDraftPost}" method="get">
+                <input type="hidden" name="postId" th:value="${post.id}"/>
+                <button type="submit" class="common-button">Publish This Blog</button>
+            </form>
+            <form th:action="@{/blogs/showFormForEditPost}" method="get" class="read-more-form">
+                <input type="hidden" name="postId" th:value="${post.id}"/>
+                <button type="submit" class="common-button">Update</button>
+            </form>
+            <form th:action="@{/blogs/list}">
+                <button type="submit" class="common-button">Back to List</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.web.SecurityFilterChain;
+
 import javax.sql.DataSource;
 
 @Configuration
@@ -26,7 +27,6 @@ public class SecurityConfig {
                         configurer
                                 .requestMatchers("/comments/save").permitAll()
                                 .requestMatchers("/blogs/showFormForAdd").authenticated()
-                                .requestMatchers("/blogs/showFormForDrafts").authenticated()
                                 .anyRequest().permitAll()
                 )
                 .formLogin(form ->

@@ -40,6 +40,8 @@ public class UserController {
             user.setActive(true);
             user.setPassword("{noop}"+user.getPassword());
             userService.save(user);
+        } else {
+            System.out.println("Invalid Password");
         }
         return "redirect:/users/login";
     }

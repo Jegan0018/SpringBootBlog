@@ -16,12 +16,13 @@
         <div sec:authorize="!isAuthenticated()">
             <a th:href="@{/blogs/showFormForAdd}" class="common-button">CREATE BLOG</a>
         </div>
-
+        <a th:href="@{/blogs/showFormForDrafts}" class="common-button">DRAFT BLOGS</a>
         <p>
         <div sec:authorize="isAuthenticated()">
             <span th:text="${user.name}"></span>
             <a th:href="@{/blogs/showFormForViewUser(authorId=${user.id})}" class="common-button">PROFILE VIEW</a>
         </div>
+
         </p>
 
         <div sec:authorize="isAuthenticated()">
@@ -84,13 +85,11 @@
             <p class="post-content" th:text="${#strings.substring(post.content, 0, 80) + '...'}"></p>
             <form th:action="@{/blogs/showFormForViewPost}" method="get" class="read-more-form">
                 <input type="hidden" name="postId" th:value="${post.id}"/>
-                <span sec:authorize="isAuthenticated()">
-                    <input type="hidden" name="authorId" th:value="${user.id}"/>
-                </span>
                 <button type="submit" class="read-more-btn">Read more</button>
             </form>
         </div>
     </div>
+    <h1 th:text="${currentPage}"></h1>
     <div th:if="${postsPage.totalPages > 1}" class="pagination">
         <a th:if="${currentPage > 1}"
            th:href="@{/blogs/list(start=${(currentPage - 2) * pageSize + 1}, limit=${pageSize}, selectedAuthors=${filterByAuthors}, selectedTags=${filterByTags}, __(${#strings.isEmpty(search)} ? '' : ('search='+${search}))__)}"

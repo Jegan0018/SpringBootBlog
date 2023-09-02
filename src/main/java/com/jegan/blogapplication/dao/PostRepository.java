@@ -45,9 +45,6 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
     @Query("SELECT DISTINCT p.author FROM Post p WHERE p IN :searchedPosts")
     List<String> findAuthorsFromSearched(List<Post> searchedPosts);
 
-    @Query("SELECT p FROM Post p WHERE p.user = :user AND p.isPublished=true")
-    List<Post> findPublishedPostsByAuthorId(User user);
-
-    @Query("SELECT p FROM Post p WHERE p.user = :user AND p.isPublished=false")
-    List<Post> findDraftPostsByAuthorId(User user);
+    @Query("SELECT p FROM Post p WHERE p.user = :user")
+    List<Post> findPostsByAuthorId(User user);
 }
