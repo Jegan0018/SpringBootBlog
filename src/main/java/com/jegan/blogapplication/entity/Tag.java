@@ -5,7 +5,6 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-
 @Entity
 @Table(name = "tags")
 public class Tag {

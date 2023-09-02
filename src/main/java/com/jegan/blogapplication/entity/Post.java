@@ -2,6 +2,7 @@ package com.jegan.blogapplication.entity;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,8 +47,11 @@ public class Post {
     private Set<Tag> tags = new HashSet<>();
 
     @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
-    @JoinColumn(name = "author_id")
+    @JoinColumn(name = "author_id",referencedColumnName = "id")
     private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private Collection<Comment> comments;
 
     public Post() {
     }
@@ -149,6 +153,14 @@ public class Post {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Collection<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Collection<Comment> comments) {
+        this.comments = comments;
     }
 
     @Override

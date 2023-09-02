@@ -17,7 +17,7 @@ public interface PostService {
 
     Post findById(int id);
 
-    void deleteById(int deleteId);
+    Post deleteById(int deleteId);
 
     Page<Post> findAll(Pageable pageable);
 
@@ -37,5 +37,7 @@ public interface PostService {
 
     List<String> findAllAuthorsFromSearched(List<Post> searchedPosts);
 
-    List<Post> findPostsByAuthorId(User user);
+    List<Post> findPublishedPostsByAuthorId(User user);
+
+    List<Post> findDraftPostsByAuthorId(User user);
 }

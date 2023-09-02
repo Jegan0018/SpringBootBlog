@@ -20,4 +20,6 @@ public interface TagService {
     Page<Post> findPostsByTagsList(List<String> filterByTags, Pageable pageable, List<Post> searchedPosts);
 
     List<String> findTagsFromSearched(List<Post> searchedPosts);
+
+    void deleteTagIfNotUsed(Tag tag);
 }

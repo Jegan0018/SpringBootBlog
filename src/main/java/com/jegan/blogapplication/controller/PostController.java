@@ -45,7 +45,7 @@ public class PostController {
     public String listBlogs(Model model,
                             @RequestParam(defaultValue = "1") int start,
                             @RequestParam(defaultValue = "10") int limit,
-                            @RequestParam(required = false,value = "search") String searchQuery,
+                            @RequestParam(required = false, value = "search") String searchQuery,
                             @RequestParam(defaultValue = "desc") String sort,
                             @RequestParam(value = "selectedAuthors", required = false) List<String> filterByAuthors,
                             @RequestParam(value = "selectedTags", required = false) List<String> filterByTags,
@@ -60,9 +60,7 @@ public class PostController {
             sorting = Sort.by(Sort.Order.asc("publishedAt"));
         }
         Page<Post> postsPage;
-        System.out.println("start " + start);
         int pageNumber = (start - 1) / limit;
-        System.out.println("Value " + pageNumber);
         Pageable pageable = PageRequest.of(pageNumber, limit, sorting);
 
         postsPage = postService.findAll(pageable);
@@ -70,14 +68,11 @@ public class PostController {
         List<Post> searchedPosts = new ArrayList<>();
 
         if (searchQuery != null && !searchQuery.isEmpty()) {
-            System.out.println("Searched");
             searchedPosts = postService.searchPosts(searchQuery.toLowerCase());
             isSearched = true;
         } else {
             postsPage = postService.findAll(pageable);
         }
-
-        System.out.println("Searched Posts "+searchedPosts);
 
         if (sort.equals("asc")) {
             searchedPosts.sort(Comparator.comparing(Post::getPublishedAt, Comparator.nullsLast(Date::compareTo)));
@@ -114,9 +109,7 @@ public class PostController {
 
         if (filterByPublishedAtFrom != null) {
             if (isSearched) {
-                System.out.println("Searched Published Date " + searchedPosts);
                 postsPage = postService.findPostsByPublishedDateFromList(filterByPublishedAtFrom, filterByPublishedAtTo, pageable, searchedPosts);
-                System.out.println("Posts Page " + postsPage.getContent());
             } else {
                 postsPage = postService.findPostsByPublishedDate(filterByPublishedAtFrom, filterByPublishedAtTo, pageable);
             }
@@ -158,18 +151,8 @@ public class PostController {
         return "blogs/post-form";
     }
 
-    @GetMapping("/showFormForViewUser")
-    public String showFormForViewUser(@RequestParam("authorId") int authorId, Model model) {
-        User user = userService.findUserById(authorId);
-        List<Post> posts = postService.findPostsByAuthorId(user);
-        model.addAttribute("posts", posts);
-        model.addAttribute("user", user);
-        return "blogs/view-user";
-    }
-
     @PostMapping("/save")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("tagInput") String tagInput, @RequestParam("authorId") int authorId) {
-        System.out.println("Post " + post);
         if (post.getIsPublished()) {
             post.setPublishedAt(Timestamp.valueOf(LocalDateTime.now()));
         }
@@ -182,17 +165,37 @@ public class PostController {
     }
 
     @GetMapping("/showFormForViewPost")
-    public String viewPost(@RequestParam("postId") int postId, Model model) {
+    public String viewPost(@RequestParam("postId") int postId, Model model, @RequestParam(value = "authorId", required = false) Integer authorId) {
         Post posts = postService.findById(postId);
         List<Comment> comments = commentService.findAllByPostId(postId);
         model.addAttribute("post", posts);
         model.addAttribute("comments", comments);
         model.addAttribute("comment", new Comment());
+        if (authorId == null) {
+            authorId = 0;
+        }
+        model.addAttribute("authorId", authorId);
+        model.addAttribute("sourcePage", "view");
         return "blogs/view-form";
     }
 
+    @GetMapping("/showFormForViewUser")
+    public String showFormForViewUser(@RequestParam("authorId") int authorId, Model model) {
+        User user = userService.findUserById(authorId);
+        List<Post> publishedPostsByAuthorId = postService.findPublishedPostsByAuthorId(user);
+        List<Post> draftPostsByAuthorId = postService.findDraftPostsByAuthorId(user);
+        Timestamp publishedAt = Timestamp.valueOf(LocalDateTime.now());
+        model.addAttribute("publishedAt", publishedAt);
+        model.addAttribute("publishedPosts", publishedPostsByAuthorId);
+        model.addAttribute("draftPosts", draftPostsByAuthorId);
+        model.addAttribute("user", user);
+        model.addAttribute("authorId", authorId);
+        model.addAttribute("sourcePage", "drafts");
+        return "blogs/view-user";
+    }
+
     @GetMapping("/showFormForEditPost")
-    public String editPost(@RequestParam("postId") int postId, Model model) {
+    public String editPost(@RequestParam("postId") int postId, @RequestParam("authorId") int authorId, Model model, @RequestParam("sourcePage") String sourcePage) {
         Post posts = postService.findById(postId);
         Set<Tag> tags = posts.getTags();
         StringBuilder tagNamesBuilder = new StringBuilder();
@@ -201,36 +204,34 @@ public class PostController {
         }
         String tagNames = tagNamesBuilder.toString().trim();
         model.addAttribute("post", posts);
+        model.addAttribute("authorId", authorId);
         model.addAttribute("tagNames", tagNames);
+        model.addAttribute("sourcePage", sourcePage);
         return "blogs/edit-form";
     }
 
     @PostMapping("/update")
-    public String updatePost(@ModelAttribute("post") Post post, @RequestParam("tagInput") String tagInput, @RequestParam("postId") int postId) {
+    public String updatePost(@ModelAttribute("post") Post post, @RequestParam("tagInput") String tagInput, @RequestParam("sourcePage") String sourcePage, @RequestParam("authorId") int authorId, @RequestParam("postId") int postId) {
         Set<Tag> tags = tagService.findOrCreateTag(tagInput);
+        System.out.println("Aythor "+authorId);
+        User user = userService.findUserById(authorId);
         post.setId(postId);
-        System.out.println(post.getIsPublished());
+        post.setUser(user);
+        post.setPublishedAt(post.getPublishedAt());
         post.setTags(tags);
         postService.save(post);
-        return "redirect:/blogs/showFormForViewPost?postId=" + postId;
-    }
-
-    @GetMapping("/showFormForDrafts")
-    public String showFormForDrafts(Model model) {
-        List<Post> postsPage;
-        postsPage = postService.findAllDrafts();
-        System.out.println("Draft Posts" + postsPage);
-        model.addAttribute("postsPage", postsPage);
-        return "blogs/draft-posts";
+        if (sourcePage.equals("drafts")) {
+            return "redirect:/blogs/showFormForViewUser?authorId=" + authorId;
+        } else {
+            return "redirect:/blogs/showFormForViewPost?postId=" + postId + "&authorId=" + authorId;
+        }
     }
 
     @GetMapping("/showFormForUpdateDraftPost")
     public String updateDraftPost(@RequestParam("postId") int postId, Model model) {
         Post post = postService.findById(postId);
-        System.out.println("Before " + post.getIsPublished());
         post.setIsPublished(true);
         post.setPublishedAt(Timestamp.valueOf(LocalDateTime.now()));
-        System.out.println("After " + post.getIsPublished());
         postService.save(post);
         model.addAttribute("post", post);
         return "redirect:/blogs/list";
@@ -238,7 +239,10 @@ public class PostController {
 
     @GetMapping("/delete")
     public String delete(@RequestParam("postId") int deleteId) {
-        postService.deleteById(deleteId);
+        Post post = postService.deleteById(deleteId);
+        for (Tag tag : post.getTags()) {
+            tagService.deleteTagIfNotUsed(tag);
+        }
         return "redirect:/blogs/list";
     }
 }

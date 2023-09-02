@@ -21,7 +21,7 @@ public class Comment {
     private String theComment;
 
     @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
-    @JoinColumn(name="post_id")
+    @JoinColumn(name="post_id",nullable = false)
     private Post post;
 
     @Column(name="created_at")

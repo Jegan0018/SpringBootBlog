@@ -68,4 +68,11 @@ public class TagServiceImpl implements TagService{
     public List<String> findTagsFromSearched(List<Post> searchedPosts) {
         return tagRepository.findTagsFromSearchedList(searchedPosts);
     }
+
+    public void deleteTagIfNotUsed(Tag tag) {
+        if (!tag.getPosts().isEmpty()) {
+            return;
+        }
+        tagRepository.delete(tag);
+    }
 }
