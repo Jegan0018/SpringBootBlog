@@ -39,12 +39,12 @@ public interface PostRepository extends JpaRepository<Post,Integer> {
     @Query("SELECT p FROM Post p WHERE p IN :searchedPosts AND p.publishedAt BETWEEN :filterByPublishedAtFrom AND :filterByPublishedAtTo AND p.isPublished=true")
     Page<Post> findPostsByPublishedDateFromList(LocalDateTime filterByPublishedAtFrom, LocalDateTime filterByPublishedAtTo, Pageable pageable, List<Post> searchedPosts);
 
-    @Query("SELECT p FROM Post p WHERE p.isPublished=false")
-    List<Post> findAllDraftPost();
-
     @Query("SELECT DISTINCT p.author FROM Post p WHERE p IN :searchedPosts")
     List<String> findAuthorsFromSearched(List<Post> searchedPosts);
 
-    @Query("SELECT p FROM Post p WHERE p.user = :user")
-    List<Post> findPostsByAuthorId(User user);
+    @Query("SELECT p FROM Post p WHERE p.user = :user AND p.isPublished=true")
+    List<Post> findPublishedPostsByAuthorId(User user);
+
+    @Query("SELECT p FROM Post p WHERE p.user = :user AND p.isPublished=false")
+    List<Post> findDraftPostsByAuthorId(User user);
 }

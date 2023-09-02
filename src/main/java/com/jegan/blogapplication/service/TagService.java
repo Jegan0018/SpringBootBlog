@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 public interface TagService {
-    List<Tag> getAlltags();
 
     Set<Tag> findOrCreateTag(String tagName);
 
@@ -20,4 +19,6 @@ public interface TagService {
     Page<Post> findPostsByTagsList(List<String> filterByTags, Pageable pageable, List<Post> searchedPosts);
 
     List<String> findTagsFromSearched(List<Post> searchedPosts);
+
+    void deleteTagIfNotUsed(Tag tag);
 }

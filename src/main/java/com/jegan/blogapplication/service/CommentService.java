@@ -14,6 +14,4 @@ public interface CommentService {
     Comment findById(int commentId);
 
     void deleteById(int deleteId);
-
-    void updateComment(Comment originalComment);
 }

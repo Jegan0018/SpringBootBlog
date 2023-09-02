@@ -24,11 +24,6 @@ public class TagServiceImpl implements TagService{
     }
 
     @Override
-    public List<Tag> getAlltags() {
-        return tagRepository.findAll();
-    }
-
-    @Override
     public Set<Tag> findOrCreateTag(String tagInput) {
         String[] tagNames = tagInput.split(" ");
         Set<Tag> tags = new HashSet<>();
@@ -67,5 +62,12 @@ public class TagServiceImpl implements TagService{
     @Override
     public List<String> findTagsFromSearched(List<Post> searchedPosts) {
         return tagRepository.findTagsFromSearchedList(searchedPosts);
+    }
+
+    public void deleteTagIfNotUsed(Tag tag) {
+        if (!tag.getPosts().isEmpty()) {
+            return;
+        }
+        tagRepository.delete(tag);
     }
 }

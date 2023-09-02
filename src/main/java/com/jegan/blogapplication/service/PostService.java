@@ -11,13 +11,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostService {
-    List<Post> findAll();
 
     void save(Post post);
 
     Post findById(int id);
 
-    void deleteById(int deleteId);
+    Post deleteById(int deleteId);
 
     Page<Post> findAll(Pageable pageable);
 
@@ -33,9 +32,9 @@ public interface PostService {
 
     Page<Post> findPostsByPublishedDateFromList(LocalDateTime filterByPublishedAtFrom, LocalDateTime filterByPublishedAtTo, Pageable pageable, List<Post> searchedPosts);
 
-    List<Post> findAllDrafts();
-
     List<String> findAllAuthorsFromSearched(List<Post> searchedPosts);
 
-    List<Post> findPostsByAuthorId(User user);
+    List<Post> findPublishedPostsByAuthorId(User user);
+
+    List<Post> findDraftPostsByAuthorId(User user);
 }

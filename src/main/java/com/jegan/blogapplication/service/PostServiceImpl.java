@@ -5,7 +5,6 @@ import com.jegan.blogapplication.entity.Post;
 import com.jegan.blogapplication.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +20,6 @@ public class PostServiceImpl implements PostService {
     @Autowired
     public PostServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
-    }
-
-    @Override
-    public List<Post> findAll() {
-        return postRepository.findAll();
     }
 
     @Override
@@ -46,8 +40,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deleteById(int deleteId) {
-        postRepository.deleteById(deleteId);
+    public Post deleteById(int deleteId) {
+        Post post = postRepository.findById(deleteId).orElse(null);
+        if (post != null) {
+            postRepository.delete(post);
+        }
+        return post;
     }
 
     @Override
@@ -86,18 +84,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> findAllDrafts() {
-        return postRepository.findAllDraftPost();
-    }
-
-    @Override
     public List<String> findAllAuthorsFromSearched(List<Post> searchedPosts) {
         return postRepository.findAuthorsFromSearched(searchedPosts);
     }
 
     @Override
-    public List<Post> findPostsByAuthorId(User user) {
-        return postRepository.findPostsByAuthorId(user);
+    public List<Post> findPublishedPostsByAuthorId(User user) {
+        return postRepository.findPublishedPostsByAuthorId(user);
+    }
+
+    @Override
+    public List<Post> findDraftPostsByAuthorId(User user) {
+        return postRepository.findDraftPostsByAuthorId(user);
     }
 
 }
