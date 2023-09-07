@@ -81,7 +81,7 @@
             <div class="post-tags">
                 <span th:each="tag : ${post.tags}" class="post-tag" th:text="${tag.name}"></span>
             </div>
-            <p class="post-content" th:text="${#strings.substring(post.content, 0, 80) + '...'}"></p>
+            <p class="post-content" th:text="${post.content.length() > 60 ? #strings.substring(post.content, 0, 60) + '...' : post.content}"></p>
             <form th:action="@{/blogs/showFormForViewPost}" method="get" class="read-more-form">
                 <input type="hidden" name="postId" th:value="${post.id}"/>
                 <span sec:authorize="isAuthenticated()">

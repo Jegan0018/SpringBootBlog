@@ -11,7 +11,7 @@ public class PostTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -27,6 +27,9 @@ public class PostTag {
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
+    public PostTag() {
+    }
+
     public PostTag(Post post, Tag tag, Timestamp createdAt, Timestamp updatedAt) {
         this.post = post;
         this.tag = tag;
@@ -34,11 +37,11 @@ public class PostTag {
         this.updatedAt = updatedAt;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
